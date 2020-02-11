@@ -1,38 +1,42 @@
-﻿@{
+﻿@model IEnumerable<bridge.Models.Repositorio>
+
+@{
     ViewBag.Title = "Home Page";
+    var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 10);
+    grid.Pager(WebGridPagerModes.All);
 }
+
 <div class="row">
-    <form class="form-group col-md-offset-1">
-        <div class="col-md-9">
-            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-        </div>
-        <div class="col-md-3">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-        </div>
-    </form>
+    <div class="col-md-6 col-md-offset-1">
+        <h2>Repositórios públicos do GitHub</h2>
+        <form class="form-inline" style="padding:20px 0">
+            <input class="form-control" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
+            <button class="btn btn-outline-success" type="submit">Pesquisar</button>
+        </form>
+    </div>
 </div>
 
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Repositório</th>
-                    <th scope="col">Descrição</th>
-                    <th scope="col">Autor</th>
-                    <th scope="col">Stars</th>
-                    <th scope="col">S2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>mdo</td>
-                    <td>mdo</td>
-                </tr>
-            </tbody>
-        </table>
+        <div id="webgrid">
+            @grid.GetHtml(
+                tableStyle: "table table-responsive table-striped table-bordered table-hover ",
+                headerStyle: "wedgrid-header",
+                footerStyle: "",
+                rowStyle: "webgrid-row-style",
+                columns:
+                grid.Columns(
+                grid.Column(columnName: "Name", header: "Nome", format:
+                @<text>
+                    @Html.ActionLink(linkText: (string)@item.Name, actionName: "Detalhes", routeValues: new { usuario = item.Owner.Login, repositorio = item.Name })
+                </text>),
+                grid.Column(columnName: "Description", header: "Descrição"),
+                grid.Column(columnName: "Owner.Login", header: "Autor"),
+                grid.Column(columnName: "Favorito", header: " ", format:
+                @<text>
+                    <span class="glyphicon glyphicon-heart-empty"></span>
+                </text>)
+            ))
+        </div>
     </div>
 </div>

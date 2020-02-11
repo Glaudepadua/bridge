@@ -1,17 +1,41 @@
-﻿@{
+﻿@model bridge.Models.Detalhes
+
+@{
     ViewBag.Title = "Contact";
+    var grid = new WebGrid(source: Model.RepositoriosRelacionados, canPage: true, rowsPerPage: 10);
+    grid.Pager(WebGridPagerModes.All);
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
+<div class="row">
+    <div class="col-md-6 col-md-offset-1">
+        <h2>Detalhes do repositório</h2>
+        <address>
+            Nº de issues: @Model.Open_issues_count<br />
+            Stars: @Model.Stargazers_count<br />
+            Linguagem: @Model.Language<br />
+            Data de criação: @Model.Created_at<br />
+        </address>
+    </div>
+</div>
 
-<address>
-    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+<div class="row">
+    <div class="col-md-6 col-md-offset-1">
+        <div id="webgrid">
+            @grid.GetHtml(
+                tableStyle: "table table-responsive table-striped table-bordered table-hover ",
+                headerStyle: "wedgrid-header",
+                footerStyle: "",
+                rowStyle: "webgrid-row-style",
+                columns:
+                grid.Columns(
+                grid.Column(columnName: "Name", header: "Repositórios relacionados")
+            ))
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2 col-md-offset-6">
+        @Html.ActionLink("Voltar", "Index", null, new { @class="btn btn-primary" })
+    </div>
+</div>
